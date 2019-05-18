@@ -12,20 +12,8 @@ use Cake\Routing\Route\DashedRoute;
 
 Router::defaultRouteClass(DashedRoute::class);
 
-Router::scope('/', function (RouteBuilder $routes) {
-    $routes->registerMiddleware('csrf', new CsrfProtectionMiddleware([
-        'httpOnly' => true
-    ]));
 
-    $routes->applyMiddleware('csrf');
-
-    $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-    $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-
-    $routes->fallbacks(DashedRoute::class);
-});
-
-Router::scope('/api', ['prefix' => 'api'], function($routes) {
+Router::scope('/', ['prefix' => 'api'], function($routes) {
     $routes->setExtensions(['json']);
 
     $routes->resources('Users', [

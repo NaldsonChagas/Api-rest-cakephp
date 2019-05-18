@@ -16,6 +16,26 @@ class UsersController extends AppController
         $this->Auth->allow(['login', 'add']);
     }
 
+    public function index() 
+    {
+        $users = $this->Users->find('all');
+
+        $this->set([
+            'users' => $users,
+            '_serialize' => 'users'
+        ]);
+    }
+
+    public function view($id = null) 
+    {
+        $user = $this->Users->get($id);
+
+        $this->set([
+            'user' => $user,
+            '_serialize' => 'user'
+        ]);
+    }
+
     public function login() 
     {
         if ($this->request->is('POST')) 
@@ -62,7 +82,7 @@ class UsersController extends AppController
                 $message = 'Ocorreu um erro';
 
             $this->set([
-                'message' => $this->Users->patchEntity($user, $this->request['data']),
+                'message' => $message,
                 '_serialize' => 'message'
             ]);
         }
