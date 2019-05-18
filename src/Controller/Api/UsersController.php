@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Controller\AppController;
 use Cake\Utility\Security;
 use Firebase\JWT\JWT;
+use ADmad\JwtAuth\Auth\JwtAuthenticate;
 
 class UsersController extends AppController 
 {
@@ -23,6 +24,19 @@ class UsersController extends AppController
         $this->set([
             'users' => $users,
             '_serialize' => 'users'
+        ]);
+    }
+    
+    public function loggedUser() 
+    {  
+        $user = JWT::decode(
+            'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsIm5hbWUiOiJOYWxkc29uIiwiZXhwIjoxNTU4MjA4MTExfQ.5SRru-oVfwnnAEiS3wb_WpTzNU2-YEWNoCoj3O9aIAM',             
+            Security::getSalt(),
+        ['HS256']);
+
+        $this->set([
+            'user' => $user,
+            '_serialize' => 'user'
         ]);
     }
 
@@ -48,6 +62,7 @@ class UsersController extends AppController
                 $data = [
                     'token' => JWT::encode([
                         'sub' => $user['id'],
+                        'name' => $user['name'],
                         'exp' => time() + 3600,
                     ], Security::salt()),
                 ];
